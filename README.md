@@ -204,4 +204,31 @@ bigquery-ecommerce-analytics/
 
 ---
 
+## What I Learned
+
+**Technically:**
+- How to structure multi-layer CTE queries that stay readable and maintainable at scale
+- Using `ROW_NUMBER()` with `PARTITION BY` to sequence purchases per customer — a pattern that unlocks a lot of behavioral analysis
+- Building cohort matrices entirely in SQL without any external tools, using `DATE_DIFF` by month as the retention axis
+- Thinking in funnels: how to pivot event-level data into user-level boolean flags using `MAX(CASE WHEN)` for clean funnel counts
+
+**As an Analyst:**
+- Framing analysis around business questions first, not just "what can I query" — every module started with a question, not a table
+- Retention and acquisition are two sides of the same problem — high acquisition numbers can mask a broken retention story
+- The funnel drop-off between product view and cart is rarely just a data problem — it points to product, pricing, or UX decisions worth investigating
+- High-LTV customer concentration is both a risk (dependency) and an opportunity (targeted retention investment)
+
+---
+
+## Challenges Faced
+
+| Challenge | How I Solved It |
+|---|---|
+| Calculating days between purchases per user | Used `ROW_NUMBER()` to tag order sequence, then pivoted with `MAX(CASE WHEN order_seq = N)` |
+| Building cohort retention without a BI tool | Computed `DATE_DIFF` in months between each order and user's first order date using multi-step CTEs |
+| Avoiding double-counting in funnel analysis | Aggregated to user level first with `MAX(CASE WHEN event_type = ...)` before counting funnel steps |
+| Keeping queries readable as complexity grew | Broke logic into named CTEs with one responsibility each, rather than nesting subqueries |
+
+---
+
 *Built to demonstrate real-world data analyst skills: asking the right business questions, writing production-quality SQL, and translating query results into actionable recommendations.*
